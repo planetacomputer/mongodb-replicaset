@@ -1,4 +1,5 @@
 
+
 # MongoDB Replica Set
 
 En aquest workshop farem servir la imatge Docker de bitname per instanciar tres contenidors MongoDB amb autenticació que conformen un Replica Set de forma automàtica.
@@ -8,7 +9,8 @@ En aquest workshop farem servir la imatge Docker de bitname per instanciar tres 
 ### Prerequisites
 
  1. Quants nodes hi ha en el Replica Set segons docker-compose.yml?
- 2. Quins tipus de nodes hi ha?
+ 2. Quina imatge Docker fan servir aquests contenidors? És la mateixa en tots ells?
+ 3. Quins tipus de nodes hi ha?
 
 ### Installing
 Descarrega el projecte i inicia docker-compose
@@ -16,7 +18,7 @@ Descarrega el projecte i inicia docker-compose
 docker-compose up -d
 ```
 
- 3. Comprova que s'ha instanciat tots els contenidors
+ 4. Comprova que s'ha instanciat tots els contenidors
 	 ``` 
 	 docker network ls
 	 docker inspect ls 
@@ -24,8 +26,14 @@ docker-compose up -d
     
  5. Comprova que s'ha creat la xarxa que conté els contenidors. Inspecciona-la i anota les ips de cada contenidor dins ella.
 	 ```
+	 docker inspect network mongodbreplicaset_default
 	 ```
  6. Esbrina les ips de cada contenidor fent una inspecció a cada contenidor per separat
+  ```
+ docker inspect mongodbreplicaset_mongodb-secondary_1 | grep IPAddress
+  ```
+ 7. Entra al programa mongo del contenidor que fa de primari al Replicat Set. I mostra per pantalla les bases de dades existents. Per defecte haurien de sortir-ne algunes.
+ 8.  
 
 And repeat
 
