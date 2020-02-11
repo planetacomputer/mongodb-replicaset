@@ -1,6 +1,3 @@
-
-
-
 # MongoDB Replica Set
 
 En aquest workshop farem servir la imatge Docker de bitname per instanciar tres contenidors MongoDB amb autenticació que conformen un Replica Set de forma automàtica.
@@ -53,54 +50,65 @@ docker inspect volume mongodbreplicaset_mongodb_master_data
 ``` No es pot connectar a l'àrbitre
 ```
 12. Connecta't al bash del contenidor àrbitre i des d'allà obre el client mongo.
+```
+docker exec -it mongocomposer_mongodb-arbiter_1 bash
+```
 13. Pots obtenir una vista dels recursos en disc dur que ocupa docker amb la comanda:
 ```docker system df
 ```
 14. Copia el fitxer zips.json del repositori al contenedor node primari del Replica Set. Fes servir la comanda *docker cp*. 
-```docker cp zips.json mongodbreplicaset_mongodb-primary_1:/tmp/
+```docker cp zips.json mongodbreplicaset_mongodb-primary_1:/usr/share/
 ```
 15. Executa des del host la comanda que llegeix el contingut del directori /tmp del primari, per demostrar que hi és.
-```docker exec -it mongodbreplicaset_mongodb-primary_1 ls /tmp
+```docker exec -it mongodbreplicaset_mongodb-primary_1 ls /usr/share/
 ```
 16. Entra en el node primari. Crea la base de dades test. crea un usuari de nom test, de password test. Assigna-li el rol adequat perquè pugui crear col·leccions, registres, etc.
 ```
+docker exec -it mongocomposer_mongodb-primary_1 mongo -u root -p password123
 use test
-**db.createUser({user: "test", pwd: "test", roles: ["readWrite","dbAdmin"]})**
+db.createUser({user: "test", pwd: "test", roles: ["readWrite","dbAdmin"]})
+```
+Per saber en quin usuari ets:
+```db.runCommand({connectionStatus : 1})
 ```
 17. Comprova amb la comanda que permet obtenir els usuaris de la base de dades que l'usuari test s'ha creat correctament
 ``` 
 db.getUsers()
 ```
-
+18. Com que sovint hi ha problemes de *too many authorized users* si vols entrar com test, el millor és sortir i entrar directament  com: 
+```
+docker exec -it mongocomposer_mongodb-primary_1 mongo --authenticationDatabase "test" -u test -p test
+```
 19. A continuació fes servir:
-```
-docker exec -it mongodbreplicaset_mongodb-primary_1 mongoimport -u test -p test --db test --collection zips --file /tmp/zips.json
-```
-per importar la col·lecció zip.
+```docker exec -it mongodbreplicaset_mongodb-primary_1 mongoimport -u test -p test --db test --collection zips --file /usr/share/zips.json```
+
+per importar la col·lecció zips.
 20. Entra dins el primari. Comprova que la col·lecció s'ha creat dins la base de dades test i mostra el nombre de registres.
+```docker exec -it mongodbreplicaset_mongodb-primary_1 mongoimport -u test -p test --db test --collection zips --file /usr/share/zips.json```
+21. Imprimeix les col·leccions de test i el nombre de registres de zips
 
-21. 
-End with an example of getting some data out of the system or using it for a little demo
-
-## Running the tests
-
-Explain how to run the automated tests for this system
-
-### Break down into end to end tests
-
-Explain what these tests test and why
-
-```
-Give an example
+```use test
+show collections
+db.zips.find().count()
 ```
 
-### And coding style tests
-
-Explain what these tests test and why
-
+22. És possible obtenir els documents directament des del node primari? Connecta-t'hi i comprova-ho. Comprova si és possible obtenir informació sobre l'status del replicaset.
+No és possible, però sí obtenir informació del cluster amb 
+``` rs.status()
 ```
-Give an example
+23. Connecta't al replicaset a la base de dades test i amb l'usuari test
 ```
+ docker exec -it mongocomposer_mongodb-secondary_1 mongo --authentication
+ ```
+ 
+
+24. Atura el contenidor del node primari i comprova que ha estat així.
+```
+ docker stop mongocomposer_mongodb-primary_1
+ docker ps
+ ```
+25. Connecta't al contenidor de nom secondary amb l'usuari test. Pots dur a terme les operacions que abans no podies dur a terme sobre la base de dades test? Indica què passa quan vols comprovar l'status del replicaset.
+26.  Tornar a entrar al contenidor secondary però 
 
 ## Deployment
 
@@ -108,30 +116,9 @@ Add additional notes about how to deploy this on a live system
 
 ## Built With
 
-* [Dropwizard](http://www.dropwizard.io/1.0.2/docs/) - The web framework used
-* [Maven](https://maven.apache.org/) - Dependency Management
-* [ROME](https://rometools.github.io/rome/) - Used to generate RSS Feeds
-
-## Contributing
-
-Please read [CONTRIBUTING.md](https://gist.github.com/PurpleBooth/b24679402957c63ec426) for details on our code of conduct, and the process for submitting pull requests to us.
-
-## Versioning
-
-We use [SemVer](http://semver.org/) for versioning. For the versions available, see the [tags on this repository](https://github.com/your/project/tags). 
-
-## Authors
-
-* **Billie Thompson** - *Initial work* - [PurpleBooth](https://github.com/PurpleBooth)
-
-See also the list of [contributors](https://github.com/your/project/contributors) who participated in this project.
-
-## License
-
-This project is licensed under the MIT License - see the [LICENSE.md](LICENSE.md) file for details
+* [StackEdit]([https://stackedit.io/](https://stackedit.io/)) - Editor online de Markdown
 
 ## Acknowledgments
 
 * Hat tip to anyone whose code was used
 * Inspiration
-* etc
