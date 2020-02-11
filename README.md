@@ -1,6 +1,7 @@
 # MongoDB Replica Set
 
 En aquest workshop farem servir la imatge Docker de bitname per instanciar tres contenidors MongoDB amb autenticació que conformen un Replica Set de forma automàtica.
+![MongoDB Replica Set](https://docs.mongodb.com/manual/_images/replica-set-primary-with-secondary-and-arbiter.bakedsvg.svg)
 
 ## Getting Started
 
