@@ -17,7 +17,7 @@ Descarrega el projecte i inicia docker-compose
 docker-compose up -d
 ```
 
- 4. Comprova que s'ha instanciat tots els contenidors
+ 4. Comprova que s'han instanciat tots els contenidors
 	 ``` 
 	 docker network ls
 	 docker inspect ls 
@@ -37,7 +37,7 @@ docker-compose up -d
  ```
 docker exec -it mongodbreplicaset_mongodb-primary_1 mongo -u root -p password123
 ```
- 9. Connecta't al Replica Set mitjançant el client de línia de comanda mongoDB. Si per consola mostra errors fixa't i pensa de quina mena pots solucionar-los:
+ 9. Connecta't al Replica Set mitjançant el client de línia de comanda mongoDB. Si per consola mostra errors fixa't i pensa de quina manera pots solucionar-los:
 
  ```
  mongo -u root -p password123 mongodb://172.19.0.3:27017,172.19.0.2:27017,172.19.0.4/admin?replicaSet=replicaset
